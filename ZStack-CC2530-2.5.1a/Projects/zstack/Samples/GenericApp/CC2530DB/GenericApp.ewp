@@ -64,7 +64,7 @@
                 <option>
                     <name>Workseg Size</name>
                     <version>0</version>
-                    <state>8</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>Constant Placement</name>
@@ -1202,7 +1202,7 @@
                 <option>
                     <name>Workseg Size</name>
                     <version>0</version>
-                    <state>8</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>Constant Placement</name>
@@ -2340,7 +2340,7 @@
                 <option>
                     <name>Workseg Size</name>
                     <version>0</version>
-                    <state>8</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>Constant Placement</name>
