@@ -309,7 +309,8 @@
                     <state>MT_TASK</state>
                     <state>MT_SYS_FUNC</state>
                     <state>MT_ZDO_FUNC</state>
-                    <state>LCD_SUPPORTED=DEBUG</state>
+                    <state>xLCD_SUPPORTED=DEBUG</state>
+                    <state>HAL_LCD=FALSE </state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -1447,7 +1448,8 @@
                     <state>MT_TASK</state>
                     <state>MT_SYS_FUNC</state>
                     <state>MT_ZDO_FUNC</state>
-                    <state>LCD_SUPPORTED=DEBUG</state>
+                    <state>xLCD_SUPPORTED=DEBUG</state>
+                    <state>HAL_LCD=FALSE </state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -2586,7 +2588,8 @@
                     <state>MT_TASK</state>
                     <state>MT_SYS_FUNC</state>
                     <state>MT_ZDO_FUNC</state>
-                    <state>LCD_SUPPORTED=DEBUG</state>
+                    <state>xLCD_SUPPORTED=DEBUG</state>
+                    <state>HAL_LCD=FALSE </state>
                     <state>xPOWER_SAVING</state>
                 </option>
                 <option>
