@@ -1,10 +1,11 @@
-ZStack-CC2530-2.5.1a/Projects/zstack/Samples/GenericApp/CC2530DB/CoordinatorEB/
-ZStack-CC2530-2.5.1a/Projects/zstack/Samples/GenericApp/CC2530DB/EndDeviceEB/
-ZStack-CC2530-2.5.1a/Projects/zstack/Samples/GenericApp/CC2530DB/RouterEB/
+ZStack-CC2530-2.5.1a/Projects/zstack/Samples/*/CC2530DB/CoordinatorEB/
+ZStack-CC2530-2.5.1a/Projects/zstack/Samples/*/CC2530DB/EndDeviceEB/
+ZStack-CC2530-2.5.1a/Projects/zstack/Samples/*/CC2530DB/RouterEB/
+ZStack-CC2530-2.5.1a/Projects/zstack/Samples/*/CC2530DB/DemoEB/
 
-ZStack-CC2530-2.5.1a/Projects/zstack/Samples/GenericApp/CC2530DB/settings/
+ZStack-CC2530-2.5.1a/Projects/zstack/Samples/*/CC2530DB/settings/
 
-ZStack-CC2530-2.5.1a/Projects/zstack/Samples/GenericApp/CC2530DB/GenericApp.dep
-ZStack-CC2530-2.5.1a/Projects/zstack/Samples/GenericApp/CC2530DB/GenericApp.ewt
-ZStack-CC2530-2.5.1a/Projects/zstack/Samples/GenericApp/CC2530DB/Backup of GenericApp.ewp
+ZStack-CC2530-2.5.1a/Projects/zstack/Samples/*/CC2530DB/*.dep
+ZStack-CC2530-2.5.1a/Projects/zstack/Samples/*/CC2530DB/*.ewt
+ZStack-CC2530-2.5.1a/Projects/zstack/Samples/*/CC2530DB/Backup of *.ewp
 
