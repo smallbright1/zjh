@@ -773,7 +773,7 @@
                 </option>
                 <option>
                     <name>OutputFile</name>
-                    <state>GenericApp.d51</state>
+                    <state>ProjectApp.d51</state>
                 </option>
                 <option>
                     <name>OutputFormat</name>
@@ -971,7 +971,7 @@
                 </option>
                 <option>
                     <name>ExtraOutputFile</name>
-                    <state>GenericApp.sim</state>
+                    <state>ProjectApp.sim</state>
                 </option>
                 <option>
                     <name>ExtraOutputFormat</name>
@@ -1912,7 +1912,7 @@
                 </option>
                 <option>
                     <name>OutputFile</name>
-                    <state>GenericApp.d51</state>
+                    <state>ProjectApp.d51</state>
                 </option>
                 <option>
                     <name>OutputFormat</name>
@@ -2110,7 +2110,7 @@
                 </option>
                 <option>
                     <name>ExtraOutputFile</name>
-                    <state>GenericApp.sim</state>
+                    <state>ProjectApp.sim</state>
                 </option>
                 <option>
                     <name>ExtraOutputFormat</name>
@@ -3053,7 +3053,7 @@
                 </option>
                 <option>
                     <name>OutputFile</name>
-                    <state>GenericApp.d51</state>
+                    <state>ProjectApp.d51</state>
                 </option>
                 <option>
                     <name>OutputFormat</name>
@@ -3251,7 +3251,7 @@
                 </option>
                 <option>
                     <name>ExtraOutputFile</name>
-                    <state>GenericApp.sim</state>
+                    <state>ProjectApp.sim</state>
                 </option>
                 <option>
                     <name>ExtraOutputFormat</name>
@@ -3423,13 +3423,13 @@
     <group>
         <name>App</name>
         <file>
-            <name>$PROJ_DIR$\..\Source\GenericApp.c</name>
+            <name>$PROJ_DIR$\..\Source\ProjectApp.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\Source\GenericApp.h</name>
+            <name>$PROJ_DIR$\..\Source\ProjectApp.h</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\Source\OSAL_GenericApp.c</name>
+            <name>$PROJ_DIR$\..\Source\OSAL_ProjectApp.c</name>
         </file>
     </group>
     <group>

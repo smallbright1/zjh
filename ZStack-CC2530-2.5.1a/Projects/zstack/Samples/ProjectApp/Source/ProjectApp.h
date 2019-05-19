@@ -1,9 +1,9 @@
 /**************************************************************************************************
-  Filename:       GenericApp.h
+  Filename:       ProjectApp.h
   Revised:        $Date: 2012-02-12 15:58:41 -0800 (Sun, 12 Feb 2012) $
   Revision:       $Revision: 29216 $
 
-  Description:    This file contains the Generic Application definitions.
+  Description:    This file contains the Project Application definitions.
 
 
   Copyright 2004-2012 Texas Instruments Incorporated. All rights reserved.
@@ -37,8 +37,8 @@
   contact Texas Instruments Incorporated at www.TI.com. 
 **************************************************************************************************/
 
-#ifndef GENERICAPP_H
-#define GENERICAPP_H
+#ifndef PROJECTAPP_H
+#define PROJECTAPP_H
 
 #ifdef __cplusplus
 extern "C"
@@ -56,24 +56,24 @@ extern "C"
 
 // These constants are only for example and should be changed to the
 // device's needs
-#define GENERICAPP_ENDPOINT           10
+#define PROJECTAPP_ENDPOINT           10
 
-#define GENERICAPP_PROFID             0x0F04
-#define GENERICAPP_DEVICEID           0x0001
-#define GENERICAPP_DEVICE_VERSION     0
-#define GENERICAPP_FLAGS              0
+#define PROJECTAPP_PROFID             0x0F04
+#define PROJECTAPP_DEVICEID           0x0001
+#define PROJECTAPP_DEVICE_VERSION     0
+#define PROJECTAPP_FLAGS              0
 
-#define GENERICAPP_MAX_CLUSTERS       1
-#define GENERICAPP_CLUSTERID          1
+#define PROJECTAPP_MAX_CLUSTERS       1
+#define PROJECTAPP_CLUSTERID          1
 
 // Send Message Timeout
-#define GENERICAPP_SEND_MSG_TIMEOUT   5000     // Every 5 seconds
+#define PROJECTAPP_SEND_MSG_TIMEOUT   5000     // Every 5 seconds
 
 // Application Events (OSAL) - These are bit weighted definitions.
-#define GENERICAPP_SEND_MSG_EVT       0x0001
+#define PROJECTAPP_SEND_MSG_EVT       0x0001
 
 #if defined( IAR_ARMCM3_LM )
-#define GENERICAPP_RTOS_MSG_EVT       0x0002
+#define PROJECTAPP_RTOS_MSG_EVT       0x0002
 #endif  
 
 /*********************************************************************
@@ -85,14 +85,14 @@ extern "C"
  */
 
 /*
- * Task Initialization for the Generic Application
+ * Task Initialization for the Project Application
  */
-extern void GenericApp_Init( byte task_id );
+extern void ProjectApp_Init( byte task_id );
 
 /*
- * Task Event Processor for the Generic Application
+ * Task Event Processor for the Project Application
  */
-extern UINT16 GenericApp_ProcessEvent( byte task_id, UINT16 events );
+extern UINT16 ProjectApp_ProcessEvent( byte task_id, UINT16 events );
 
 /*********************************************************************
 *********************************************************************/
@@ -101,4 +101,4 @@ extern UINT16 GenericApp_ProcessEvent( byte task_id, UINT16 events );
 }
 #endif
 
-#endif /* GENERICAPP_H */
+#endif /* PROJECTAPP_H */

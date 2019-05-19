@@ -1,5 +1,5 @@
 /**************************************************************************************************
-  Filename:       OSAL_GenericApp.c
+  Filename:       OSAL_ProjectApp.c
   Revised:        $Date: 2008-02-07 12:10:00 -0800 (Thu, 07 Feb 2008) $
   Revision:       $Revision: 16360 $
 
@@ -62,7 +62,7 @@
   #include "aps_frag.h"
 #endif
 
-#include "GenericApp.h"
+#include "ProjectApp.h"
 
 /*********************************************************************
  * GLOBAL VARIABLES
@@ -84,7 +84,7 @@ const pTaskEventHandlerFn tasksArr[] = {
 #if defined ( ZIGBEE_FREQ_AGILITY ) || defined ( ZIGBEE_PANID_CONFLICT )
   ZDNwkMgr_event_loop,
 #endif
-  GenericApp_ProcessEvent
+  ProjectApp_ProcessEvent
 };
 
 const uint8 tasksCnt = sizeof( tasksArr ) / sizeof( tasksArr[0] );
@@ -124,7 +124,7 @@ void osalInitTasks( void )
 #if defined ( ZIGBEE_FREQ_AGILITY ) || defined ( ZIGBEE_PANID_CONFLICT )
   ZDNwkMgr_Init( taskID++ );
 #endif
-  GenericApp_Init( taskID );
+  ProjectApp_Init( taskID );
 }
 
 /*********************************************************************

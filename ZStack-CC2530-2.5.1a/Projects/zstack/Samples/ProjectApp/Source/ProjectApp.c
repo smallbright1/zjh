@@ -1,9 +1,9 @@
 /******************************************************************************
-  Filename:       GenericApp.c
+  Filename:       ProjectApp.c
   Revised:        $Date: 2012-03-07 01:04:58 -0800 (Wed, 07 Mar 2012) $
   Revision:       $Revision: 29656 $
 
-  Description:    Generic Application (no Profile).
+  Description:    Project Application (no Profile).
 
 
   Copyright 2004-2012 Texas Instruments Incorporated. All rights reserved.
@@ -41,7 +41,7 @@
   This application isn't intended to do anything useful, it is
   intended to be a simple example of an application's structure.
 
-  This application sends "Hello World" to another "Generic"
+  This application sends "Hello World" to another "Project"
   application every 5 seconds.  The application will also
   receives "Hello World" packets.
 
@@ -66,7 +66,7 @@
 #include "ZDObject.h"
 #include "ZDProfile.h"
 
-#include "GenericApp.h"
+#include "ProjectApp.h"
 #include "DebugTrace.h"
 
 #if !defined( WIN32 )
@@ -100,29 +100,29 @@
  * GLOBAL VARIABLES
  */
 // This list should be filled with Application specific Cluster IDs.
-const cId_t GenericApp_ClusterList[GENERICAPP_MAX_CLUSTERS] =
+const cId_t ProjectApp_ClusterList[PROJECTAPP_MAX_CLUSTERS] =
 {
-  GENERICAPP_CLUSTERID
+  PROJECTAPP_CLUSTERID
 };
 
-const SimpleDescriptionFormat_t GenericApp_SimpleDesc =
+const SimpleDescriptionFormat_t ProjectApp_SimpleDesc =
 {
-  GENERICAPP_ENDPOINT,              //  int Endpoint;
-  GENERICAPP_PROFID,                //  uint16 AppProfId[2];
-  GENERICAPP_DEVICEID,              //  uint16 AppDeviceId[2];
-  GENERICAPP_DEVICE_VERSION,        //  int   AppDevVer:4;
-  GENERICAPP_FLAGS,                 //  int   AppFlags:4;
-  GENERICAPP_MAX_CLUSTERS,          //  byte  AppNumInClusters;
-  (cId_t *)GenericApp_ClusterList,  //  byte *pAppInClusterList;
-  GENERICAPP_MAX_CLUSTERS,          //  byte  AppNumInClusters;
-  (cId_t *)GenericApp_ClusterList   //  byte *pAppInClusterList;
+  PROJECTAPP_ENDPOINT,              //  int Endpoint;
+  PROJECTAPP_PROFID,                //  uint16 AppProfId[2];
+  PROJECTAPP_DEVICEID,              //  uint16 AppDeviceId[2];
+  PROJECTAPP_DEVICE_VERSION,        //  int   AppDevVer:4;
+  PROJECTAPP_FLAGS,                 //  int   AppFlags:4;
+  PROJECTAPP_MAX_CLUSTERS,          //  byte  AppNumInClusters;
+  (cId_t *)ProjectApp_ClusterList,  //  byte *pAppInClusterList;
+  PROJECTAPP_MAX_CLUSTERS,          //  byte  AppNumInClusters;
+  (cId_t *)ProjectApp_ClusterList   //  byte *pAppInClusterList;
 };
 
 // This is the Endpoint/Interface description.  It is defined here, but
-// filled-in in GenericApp_Init().  Another way to go would be to fill
+// filled-in in ProjectApp_Init().  Another way to go would be to fill
 // in the structure here and make it a "const" (in code space).  The
 // way it's defined in this sample app it is define in RAM.
-endPointDesc_t GenericApp_epDesc;
+endPointDesc_t ProjectApp_epDesc;
 
 /*********************************************************************
  * EXTERNAL VARIABLES
@@ -135,26 +135,26 @@ endPointDesc_t GenericApp_epDesc;
 /*********************************************************************
  * LOCAL VARIABLES
  */
-byte GenericApp_TaskID;   // Task ID for internal task/event processing
+byte ProjectApp_TaskID;   // Task ID for internal task/event processing
                           // This variable will be received when
-                          // GenericApp_Init() is called.
-devStates_t GenericApp_NwkState;
+                          // ProjectApp_Init() is called.
+devStates_t ProjectApp_NwkState;
 
 
-byte GenericApp_TransID;  // This is the unique message ID (counter)
+byte ProjectApp_TransID;  // This is the unique message ID (counter)
 
-afAddrType_t GenericApp_DstAddr;
+afAddrType_t ProjectApp_DstAddr;
 
 /*********************************************************************
  * LOCAL FUNCTIONS
  */
-static void GenericApp_ProcessZDOMsgs( zdoIncomingMsg_t *inMsg );
-static void GenericApp_HandleKeys( byte shift, byte keys );
-static void GenericApp_MessageMSGCB( afIncomingMSGPacket_t *pckt );
-static void GenericApp_SendTheMessage( void );
+static void ProjectApp_ProcessZDOMsgs( zdoIncomingMsg_t *inMsg );
+static void ProjectApp_HandleKeys( byte shift, byte keys );
+static void ProjectApp_MessageMSGCB( afIncomingMSGPacket_t *pckt );
+static void ProjectApp_SendTheMessage( void );
 
 #if defined( IAR_ARMCM3_LM )
-static void GenericApp_ProcessRtosMessage( void );
+static void ProjectApp_ProcessRtosMessage( void );
 #endif
 
 /*********************************************************************
@@ -166,9 +166,9 @@ static void GenericApp_ProcessRtosMessage( void );
  */
 
 /*********************************************************************
- * @fn      GenericApp_Init
+ * @fn      ProjectApp_Init
  *
- * @brief   Initialization function for the Generic App Task.
+ * @brief   Initialization function for the Project App Task.
  *          This is called during initialization and should contain
  *          any application specific initialization (ie. hardware
  *          initialization/setup, table initialization, power up
@@ -179,51 +179,51 @@ static void GenericApp_ProcessRtosMessage( void );
  *
  * @return  none
  */
-void GenericApp_Init( uint8 task_id )
+void ProjectApp_Init( uint8 task_id )
 {
-  GenericApp_TaskID = task_id;
-  GenericApp_NwkState = DEV_INIT;
-  GenericApp_TransID = 0;
+  ProjectApp_TaskID = task_id;
+  ProjectApp_NwkState = DEV_INIT;
+  ProjectApp_TransID = 0;
 
   // Device hardware initialization can be added here or in main() (Zmain.c).
   // If the hardware is application specific - add it here.
   // If the hardware is other parts of the device add it in main().
 
-  GenericApp_DstAddr.addrMode = (afAddrMode_t)AddrNotPresent;
-  GenericApp_DstAddr.endPoint = 0;
-  GenericApp_DstAddr.addr.shortAddr = 0;
+  ProjectApp_DstAddr.addrMode = (afAddrMode_t)AddrNotPresent;
+  ProjectApp_DstAddr.endPoint = 0;
+  ProjectApp_DstAddr.addr.shortAddr = 0;
 
   // Fill out the endpoint description.
-  GenericApp_epDesc.endPoint = GENERICAPP_ENDPOINT;
-  GenericApp_epDesc.task_id = &GenericApp_TaskID;
-  GenericApp_epDesc.simpleDesc
-            = (SimpleDescriptionFormat_t *)&GenericApp_SimpleDesc;
-  GenericApp_epDesc.latencyReq = noLatencyReqs;
+  ProjectApp_epDesc.endPoint = PROJECTAPP_ENDPOINT;
+  ProjectApp_epDesc.task_id = &ProjectApp_TaskID;
+  ProjectApp_epDesc.simpleDesc
+            = (SimpleDescriptionFormat_t *)&ProjectApp_SimpleDesc;
+  ProjectApp_epDesc.latencyReq = noLatencyReqs;
 
   // Register the endpoint description with the AF
-  afRegister( &GenericApp_epDesc );
+  afRegister( &ProjectApp_epDesc );
 
   // Register for all key events - This app will handle all key events
-  RegisterForKeys( GenericApp_TaskID );
+  RegisterForKeys( ProjectApp_TaskID );
 
   // Update the display
 #if defined ( LCD_SUPPORTED )
-  HalLcdWriteString( "GenericApp", HAL_LCD_LINE_1 );
+  HalLcdWriteString( "ProjectApp", HAL_LCD_LINE_1 );
 #endif
 
-  ZDO_RegisterForZDOMsg( GenericApp_TaskID, End_Device_Bind_rsp );
-  ZDO_RegisterForZDOMsg( GenericApp_TaskID, Match_Desc_rsp );
+  ZDO_RegisterForZDOMsg( ProjectApp_TaskID, End_Device_Bind_rsp );
+  ZDO_RegisterForZDOMsg( ProjectApp_TaskID, Match_Desc_rsp );
 
 #if defined( IAR_ARMCM3_LM )
   // Register this task with RTOS task initiator
-  RTOS_RegisterApp( task_id, GENERICAPP_RTOS_MSG_EVT );
+  RTOS_RegisterApp( task_id, PROJECTAPP_RTOS_MSG_EVT );
 #endif
 }
 
 /*********************************************************************
- * @fn      GenericApp_ProcessEvent
+ * @fn      ProjectApp_ProcessEvent
  *
- * @brief   Generic Application Task event processor.  This function
+ * @brief   Project Application Task event processor.  This function
  *          is called to process all events for the task.  Events
  *          include timers, messages and any other user defined events.
  *
@@ -233,7 +233,7 @@ void GenericApp_Init( uint8 task_id )
  *
  * @return  none
  */
-uint16 GenericApp_ProcessEvent( uint8 task_id, uint16 events )
+uint16 ProjectApp_ProcessEvent( uint8 task_id, uint16 events )
 {
   afIncomingMSGPacket_t *MSGpkt;
   afDataConfirm_t *afDataConfirm;
@@ -246,17 +246,17 @@ uint16 GenericApp_ProcessEvent( uint8 task_id, uint16 events )
 
   if ( events & SYS_EVENT_MSG )
   {
-    MSGpkt = (afIncomingMSGPacket_t *)osal_msg_receive( GenericApp_TaskID );
+    MSGpkt = (afIncomingMSGPacket_t *)osal_msg_receive( ProjectApp_TaskID );
     while ( MSGpkt )
     {
       switch ( MSGpkt->hdr.event )
       {
         case ZDO_CB_MSG:
-          GenericApp_ProcessZDOMsgs( (zdoIncomingMsg_t *)MSGpkt );
+          ProjectApp_ProcessZDOMsgs( (zdoIncomingMsg_t *)MSGpkt );
           break;
 
         case KEY_CHANGE:
-          GenericApp_HandleKeys( ((keyChange_t *)MSGpkt)->state, ((keyChange_t *)MSGpkt)->keys );
+          ProjectApp_HandleKeys( ((keyChange_t *)MSGpkt)->state, ((keyChange_t *)MSGpkt)->keys );
           break;
 
         case AF_DATA_CONFIRM_CMD:
@@ -278,19 +278,19 @@ uint16 GenericApp_ProcessEvent( uint8 task_id, uint16 events )
           break;
 
         case AF_INCOMING_MSG_CMD:
-          GenericApp_MessageMSGCB( MSGpkt );
+          ProjectApp_MessageMSGCB( MSGpkt );
           break;
 
         case ZDO_STATE_CHANGE:
-          GenericApp_NwkState = (devStates_t)(MSGpkt->hdr.status);
-          if ( (GenericApp_NwkState == DEV_ZB_COORD)
-              || (GenericApp_NwkState == DEV_ROUTER)
-              || (GenericApp_NwkState == DEV_END_DEVICE) )
+          ProjectApp_NwkState = (devStates_t)(MSGpkt->hdr.status);
+          if ( (ProjectApp_NwkState == DEV_ZB_COORD)
+              || (ProjectApp_NwkState == DEV_ROUTER)
+              || (ProjectApp_NwkState == DEV_END_DEVICE) )
           {
             // Start sending "the" message in a regular interval.
-            osal_start_timerEx( GenericApp_TaskID,
-                                GENERICAPP_SEND_MSG_EVT,
-                                GENERICAPP_SEND_MSG_TIMEOUT );
+            osal_start_timerEx( ProjectApp_TaskID,
+                                PROJECTAPP_SEND_MSG_EVT,
+                                PROJECTAPP_SEND_MSG_TIMEOUT );
           }
           break;
 
@@ -302,7 +302,7 @@ uint16 GenericApp_ProcessEvent( uint8 task_id, uint16 events )
       osal_msg_deallocate( (uint8 *)MSGpkt );
 
       // Next
-      MSGpkt = (afIncomingMSGPacket_t *)osal_msg_receive( GenericApp_TaskID );
+      MSGpkt = (afIncomingMSGPacket_t *)osal_msg_receive( ProjectApp_TaskID );
     }
 
     // return unprocessed events
@@ -310,31 +310,31 @@ uint16 GenericApp_ProcessEvent( uint8 task_id, uint16 events )
   }
 
   // Send a message out - This event is generated by a timer
-  //  (setup in GenericApp_Init()).
-  if ( events & GENERICAPP_SEND_MSG_EVT )
+  //  (setup in ProjectApp_Init()).
+  if ( events & PROJECTAPP_SEND_MSG_EVT )
   {
     // Send "the" message
-    GenericApp_SendTheMessage();
+    ProjectApp_SendTheMessage();
 
     // Setup to send message again
-    osal_start_timerEx( GenericApp_TaskID,
-                        GENERICAPP_SEND_MSG_EVT,
-                        GENERICAPP_SEND_MSG_TIMEOUT );
+    osal_start_timerEx( ProjectApp_TaskID,
+                        PROJECTAPP_SEND_MSG_EVT,
+                        PROJECTAPP_SEND_MSG_TIMEOUT );
 
     // return unprocessed events
-    return (events ^ GENERICAPP_SEND_MSG_EVT);
+    return (events ^ PROJECTAPP_SEND_MSG_EVT);
   }
 
   
 #if defined( IAR_ARMCM3_LM )
   // Receive a message from the RTOS queue
-  if ( events & GENERICAPP_RTOS_MSG_EVT )
+  if ( events & PROJECTAPP_RTOS_MSG_EVT )
   {
     // Process message from RTOS queue
-    GenericApp_ProcessRtosMessage();
+    ProjectApp_ProcessRtosMessage();
 
     // return unprocessed events
-    return (events ^ GENERICAPP_RTOS_MSG_EVT);
+    return (events ^ PROJECTAPP_RTOS_MSG_EVT);
   }
 #endif
 
@@ -347,7 +347,7 @@ uint16 GenericApp_ProcessEvent( uint8 task_id, uint16 events )
  */
 
 /*********************************************************************
- * @fn      GenericApp_ProcessZDOMsgs()
+ * @fn      ProjectApp_ProcessZDOMsgs()
  *
  * @brief   Process response messages
  *
@@ -355,7 +355,7 @@ uint16 GenericApp_ProcessEvent( uint8 task_id, uint16 events )
  *
  * @return  none
  */
-static void GenericApp_ProcessZDOMsgs( zdoIncomingMsg_t *inMsg )
+static void ProjectApp_ProcessZDOMsgs( zdoIncomingMsg_t *inMsg )
 {
   switch ( inMsg->clusterID )
   {
@@ -381,10 +381,10 @@ static void GenericApp_ProcessZDOMsgs( zdoIncomingMsg_t *inMsg )
         {
           if ( pRsp->status == ZSuccess && pRsp->cnt )
           {
-            GenericApp_DstAddr.addrMode = (afAddrMode_t)Addr16Bit;
-            GenericApp_DstAddr.addr.shortAddr = pRsp->nwkAddr;
+            ProjectApp_DstAddr.addrMode = (afAddrMode_t)Addr16Bit;
+            ProjectApp_DstAddr.addr.shortAddr = pRsp->nwkAddr;
             // Take the first endpoint, Can be changed to search through endpoints
-            GenericApp_DstAddr.endPoint = pRsp->epList[0];
+            ProjectApp_DstAddr.endPoint = pRsp->epList[0];
 
             // Light LED
             HalLedSet( HAL_LED_4, HAL_LED_MODE_ON );
@@ -397,7 +397,7 @@ static void GenericApp_ProcessZDOMsgs( zdoIncomingMsg_t *inMsg )
 }
 
 /*********************************************************************
- * @fn      GenericApp_HandleKeys
+ * @fn      ProjectApp_HandleKeys
  *
  * @brief   Handles all key events for this device.
  *
@@ -410,7 +410,7 @@ static void GenericApp_ProcessZDOMsgs( zdoIncomingMsg_t *inMsg )
  *
  * @return  none
  */
-static void GenericApp_HandleKeys( uint8 shift, uint8 keys )
+static void ProjectApp_HandleKeys( uint8 shift, uint8 keys )
 {
   zAddrType_t dstAddr;
 
@@ -452,10 +452,10 @@ static void GenericApp_HandleKeys( uint8 shift, uint8 keys )
       dstAddr.addrMode = Addr16Bit;
       dstAddr.addr.shortAddr = 0x0000; // Coordinator
       ZDP_EndDeviceBindReq( &dstAddr, NLME_GetShortAddr(),
-                            GenericApp_epDesc.endPoint,
-                            GENERICAPP_PROFID,
-                            GENERICAPP_MAX_CLUSTERS, (cId_t *)GenericApp_ClusterList,
-                            GENERICAPP_MAX_CLUSTERS, (cId_t *)GenericApp_ClusterList,
+                            ProjectApp_epDesc.endPoint,
+                            PROJECTAPP_PROFID,
+                            PROJECTAPP_MAX_CLUSTERS, (cId_t *)ProjectApp_ClusterList,
+                            PROJECTAPP_MAX_CLUSTERS, (cId_t *)ProjectApp_ClusterList,
                             FALSE );
     }
 
@@ -470,9 +470,9 @@ static void GenericApp_HandleKeys( uint8 shift, uint8 keys )
       dstAddr.addrMode = AddrBroadcast;
       dstAddr.addr.shortAddr = NWK_BROADCAST_SHORTADDR;
       ZDP_MatchDescReq( &dstAddr, NWK_BROADCAST_SHORTADDR,
-                        GENERICAPP_PROFID,
-                        GENERICAPP_MAX_CLUSTERS, (cId_t *)GenericApp_ClusterList,
-                        GENERICAPP_MAX_CLUSTERS, (cId_t *)GenericApp_ClusterList,
+                        PROJECTAPP_PROFID,
+                        PROJECTAPP_MAX_CLUSTERS, (cId_t *)ProjectApp_ClusterList,
+                        PROJECTAPP_MAX_CLUSTERS, (cId_t *)ProjectApp_ClusterList,
                         FALSE );
     }
   }
@@ -483,7 +483,7 @@ static void GenericApp_HandleKeys( uint8 shift, uint8 keys )
  */
 
 /*********************************************************************
- * @fn      GenericApp_MessageMSGCB
+ * @fn      ProjectApp_MessageMSGCB
  *
  * @brief   Data message processor callback.  This function processes
  *          any incoming data - probably from other devices.  So, based
@@ -493,11 +493,11 @@ static void GenericApp_HandleKeys( uint8 shift, uint8 keys )
  *
  * @return  none
  */
-static void GenericApp_MessageMSGCB( afIncomingMSGPacket_t *pkt )
+static void ProjectApp_MessageMSGCB( afIncomingMSGPacket_t *pkt )
 {
   switch ( pkt->clusterId )
   {
-    case GENERICAPP_CLUSTERID:
+    case PROJECTAPP_CLUSTERID:
       // "the" message
 #if defined( LCD_SUPPORTED )
       HalLcdWriteScreen( (char*)pkt->cmd.Data, "rcvd" );
@@ -509,7 +509,7 @@ static void GenericApp_MessageMSGCB( afIncomingMSGPacket_t *pkt )
 }
 
 /*********************************************************************
- * @fn      GenericApp_SendTheMessage
+ * @fn      ProjectApp_SendTheMessage
  *
  * @brief   Send "the" message.
  *
@@ -517,15 +517,15 @@ static void GenericApp_MessageMSGCB( afIncomingMSGPacket_t *pkt )
  *
  * @return  none
  */
-static void GenericApp_SendTheMessage( void )
+static void ProjectApp_SendTheMessage( void )
 {
   char theMessageData[] = "Hello World";
 
-  if ( AF_DataRequest( &GenericApp_DstAddr, &GenericApp_epDesc,
-                       GENERICAPP_CLUSTERID,
+  if ( AF_DataRequest( &ProjectApp_DstAddr, &ProjectApp_epDesc,
+                       PROJECTAPP_CLUSTERID,
                        (byte)osal_strlen( theMessageData ) + 1,
                        (byte *)&theMessageData,
-                       &GenericApp_TransID,
+                       &ProjectApp_TransID,
                        AF_DISCV_ROUTE, AF_DEFAULT_RADIUS ) == afStatus_SUCCESS )
   {
     // Successfully requested to be sent.
@@ -538,7 +538,7 @@ static void GenericApp_SendTheMessage( void )
 
 #if defined( IAR_ARMCM3_LM )
 /*********************************************************************
- * @fn      GenericApp_ProcessRtosMessage
+ * @fn      ProjectApp_ProcessRtosMessage
  *
  * @brief   Receive message from RTOS queue, send response back.
  *
@@ -546,7 +546,7 @@ static void GenericApp_SendTheMessage( void )
  *
  * @return  none
  */
-static void GenericApp_ProcessRtosMessage( void )
+static void ProjectApp_ProcessRtosMessage( void )
 {
   osalQueue_t inMsg;
 
