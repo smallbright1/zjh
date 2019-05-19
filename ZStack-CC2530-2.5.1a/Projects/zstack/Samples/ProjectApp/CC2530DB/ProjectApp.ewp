@@ -1445,10 +1445,11 @@
                 </option>
                 <option>
                     <name>CCDefines</name>
-                    <state>ZTOOL_P1</state>
-                    <state>MT_TASK</state>
-                    <state>MT_SYS_FUNC</state>
-                    <state>MT_ZDO_FUNC</state>
+                    <state>xZTOOL_P1</state>
+                    <state>xMT_TASK</state>
+                    <state>xMT_SYS_FUNC</state>
+                    <state>xMT_ZDO_FUNC</state>
+                    <state>HAL_UART=TRUE</state>
                     <state>xLCD_SUPPORTED=DEBUG</state>
                     <state>HAL_LCD=FALSE </state>
                 </option>
@@ -3431,6 +3432,12 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\Source\ProjectApp.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Source\user_api.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Source\user_api.h</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\Source\user_printf.c</name>
