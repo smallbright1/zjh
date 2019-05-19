@@ -3423,13 +3423,19 @@
     <group>
         <name>App</name>
         <file>
+            <name>$PROJ_DIR$\..\Source\OSAL_ProjectApp.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\Source\ProjectApp.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\Source\ProjectApp.h</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\Source\OSAL_ProjectApp.c</name>
+            <name>$PROJ_DIR$\..\Source\user_uart0.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Source\user_uart0.h</name>
         </file>
     </group>
     <group>

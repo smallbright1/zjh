@@ -84,6 +84,8 @@
 #include "RTOS_App.h"
 #endif  
 
+#include "user_uart0.h"
+
 /*********************************************************************
  * MACROS
  */
@@ -218,6 +220,10 @@ void ProjectApp_Init( uint8 task_id )
   // Register this task with RTOS task initiator
   RTOS_RegisterApp( task_id, PROJECTAPP_RTOS_MSG_EVT );
 #endif
+  
+   USER_Uart0_Init(HAL_UART_BR_115200);
+   
+   HalUARTWrite ( USER_UART_DEFAULT_PORT, "hello world!\r\n", sizeof("hello world!\r\n")-1 );
 }
 
 /*********************************************************************
