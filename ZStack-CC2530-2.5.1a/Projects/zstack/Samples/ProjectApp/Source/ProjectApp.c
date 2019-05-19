@@ -85,6 +85,7 @@
 #endif  
 
 #include "user_uart0.h"
+#include "user_printf.h"
 
 /*********************************************************************
  * MACROS
@@ -224,6 +225,7 @@ void ProjectApp_Init( uint8 task_id )
    USER_Uart0_Init(HAL_UART_BR_115200);
    
    HalUARTWrite ( USER_UART_DEFAULT_PORT, "hello world!\r\n", sizeof("hello world!\r\n")-1 );
+   printf("test printf\r\n");
 }
 
 /*********************************************************************

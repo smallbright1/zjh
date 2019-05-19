@@ -3433,6 +3433,12 @@
             <name>$PROJ_DIR$\..\Source\ProjectApp.h</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\Source\user_printf.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Source\user_printf.h</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\Source\user_uart0.c</name>
         </file>
         <file>
