@@ -86,7 +86,7 @@
 
 #include "user_uart0.h"
 #include "user_printf.h"
-
+#include "user_api.h"
 /*********************************************************************
  * MACROS
  */
@@ -224,8 +224,7 @@ void ProjectApp_Init( uint8 task_id )
   
    USER_Uart0_Init(HAL_UART_BR_115200);
    
-   HalUARTWrite ( USER_UART_DEFAULT_PORT, "hello world!\r\n", sizeof("hello world!\r\n")-1 );
-   printf("test printf\r\n");
+  
 }
 
 /*********************************************************************
@@ -290,16 +289,7 @@ uint16 ProjectApp_ProcessEvent( uint8 task_id, uint16 events )
           break;
 
         case ZDO_STATE_CHANGE:
-          ProjectApp_NwkState = (devStates_t)(MSGpkt->hdr.status);
-          if ( (ProjectApp_NwkState == DEV_ZB_COORD)
-              || (ProjectApp_NwkState == DEV_ROUTER)
-              || (ProjectApp_NwkState == DEV_END_DEVICE) )
-          {
-            // Start sending "the" message in a regular interval.
-            osal_start_timerEx( ProjectApp_TaskID,
-                                PROJECTAPP_SEND_MSG_EVT,
-                                PROJECTAPP_SEND_MSG_TIMEOUT );
-          }
+           user_state_change((devStates_t)(MSGpkt->hdr.status));
           break;
 
         default:

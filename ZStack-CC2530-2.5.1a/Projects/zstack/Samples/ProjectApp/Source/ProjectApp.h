@@ -75,7 +75,7 @@ extern "C"
 #if defined( IAR_ARMCM3_LM )
 #define PROJECTAPP_RTOS_MSG_EVT       0x0002
 #endif  
-
+extern endPointDesc_t ProjectApp_epDesc;
 /*********************************************************************
  * MACROS
  */
