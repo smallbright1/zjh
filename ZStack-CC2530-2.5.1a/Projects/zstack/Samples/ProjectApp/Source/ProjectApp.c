@@ -496,12 +496,7 @@ static void ProjectApp_MessageMSGCB( afIncomingMSGPacket_t *pkt )
   switch ( pkt->clusterId )
   {
     case PROJECTAPP_CLUSTERID:
-      // "the" message
-#if defined( LCD_SUPPORTED )
-      HalLcdWriteScreen( (char*)pkt->cmd.Data, "rcvd" );
-#elif defined( WIN32 )
-      WPRINTSTR( pkt->cmd.Data );
-#endif
+
       break;
   }
 }
