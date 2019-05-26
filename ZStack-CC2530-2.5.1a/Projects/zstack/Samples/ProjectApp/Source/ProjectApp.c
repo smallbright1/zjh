@@ -496,7 +496,7 @@ static void ProjectApp_MessageMSGCB( afIncomingMSGPacket_t *pkt )
   switch ( pkt->clusterId )
   {
     case PROJECTAPP_CLUSTERID:
-
+      printf("%s\r\n", pkt->cmd.Data);
       break;
   }
 }
