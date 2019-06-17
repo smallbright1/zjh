@@ -1,7 +1,7 @@
 #include "user_api.h"
 #include "ProjectApp.h"
 #include "user_printf.h"
-
+#include "string.h"
 const uint8* devStates_str[11]=
 {
   "DEV_HOLD",               // Initialized - not started automatically
@@ -40,25 +40,25 @@ void user_show_info(void)
          *((uint16*)(&MacAddr[2])),
          *((uint16*)(&MacAddr[0])));
 }
+
 afStatus_t user_send_data( afAddrMode_t mode, uint16 addr, char *data_buf )
 {
-  static byte  TransID;
-  afAddrType_t dst_addr;
-  afStatus_t   status;
+  static uint8 transID;
+  afAddrType_t dstAddr;
+  afStatus_t status;
 
-  dst_addr.addrMode       = mode;
-  dst_addr.endPoint       = PROJECTAPP_ENDPOINT;
-  dst_addr.addr.shortAddr = addr;
+  dstAddr.addrMode = mode;
+  dstAddr.endPoint = PROJECTAPP_ENDPOINT;
+  dstAddr.addr.shortAddr = addr;
 
-  status = AF_DataRequest( &dst_addr,
-                           &ProjectApp_epDesc,
-                           PROJECTAPP_CLUSTERID,
-                           osal_strlen( data_buf ),
-                           (byte *)data_buf,
-                           &TransID,
-                           AF_DISCV_ROUTE,
-                           AF_DEFAULT_RADIUS
-                         );
+  status= AF_DataRequest( &dstAddr,
+                          &ProjectApp_epDesc,
+                          PROJECTAPP_CLUSTERID,
+                          strlen((const char *)data_buf)+1,
+                          (uint8 *)data_buf,
+                          &transID,
+                          AF_DISCV_ROUTE,
+                          AF_DEFAULT_RADIUS );
 
   return status;
 }
