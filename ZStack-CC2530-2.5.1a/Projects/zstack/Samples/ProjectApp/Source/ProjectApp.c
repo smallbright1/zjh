@@ -1,65 +1,3 @@
-/******************************************************************************
-  Filename:       ProjectApp.c
-  Revised:        $Date: 2012-03-07 01:04:58 -0800 (Wed, 07 Mar 2012) $
-  Revision:       $Revision: 29656 $
-
-  Description:    Project Application (no Profile).
-
-
-  Copyright 2004-2012 Texas Instruments Incorporated. All rights reserved.
-
-  IMPORTANT: Your use of this Software is limited to those specific rights
-  granted under the terms of a software license agreement between the user
-  who downloaded the software, his/her employer (which must be your employer)
-  and Texas Instruments Incorporated (the "License"). You may not use this
-  Software unless you agree to abide by the terms of the License. The License
-  limits your use, and you acknowledge, that the Software may not be modified,
-  copied or distributed unless embedded on a Texas Instruments microcontroller
-  or used solely and exclusively in conjunction with a Texas Instruments radio
-  frequency transceiver, which is integrated into your product. Other than for
-  the foregoing purpose, you may not use, reproduce, copy, prepare derivative
-  works of, modify, distribute, perform, display or sell this Software and/or
-  its documentation for any purpose.
-
-  YOU FURTHER ACKNOWLEDGE AND AGREE THAT THE SOFTWARE AND DOCUMENTATION ARE
-  PROVIDED “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED,
-  INCLUDING WITHOUT LIMITATION, ANY WARRANTY OF MERCHANTABILITY, TITLE,
-  NON-INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT SHALL
-  TEXAS INSTRUMENTS OR ITS LICENSORS BE LIABLE OR OBLIGATED UNDER CONTRACT,
-  NEGLIGENCE, STRICT LIABILITY, CONTRIBUTION, BREACH OF WARRANTY, OR OTHER
-  LEGAL EQUITABLE THEORY ANY DIRECT OR INDIRECT DAMAGES OR EXPENSES
-  INCLUDING BUT NOT LIMITED TO ANY INCIDENTAL, SPECIAL, INDIRECT, PUNITIVE
-  OR CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF PROCUREMENT
-  OF SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
-  (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
-
-  Should you have any questions regarding your right to use this Software,
-  contact Texas Instruments Incorporated at www.TI.com.
-******************************************************************************/
-
-/*********************************************************************
-  This application isn't intended to do anything useful, it is
-  intended to be a simple example of an application's structure.
-
-  This application sends "Hello World" to another "Project"
-  application every 5 seconds.  The application will also
-  receives "Hello World" packets.
-
-  The "Hello World" messages are sent/received as MSG type message.
-
-  This applications doesn't have a profile, so it handles everything
-  directly - itself.
-
-  Key control:
-    SW1:
-    SW2:  initiates end device binding
-    SW3:
-    SW4:  initiates a match description request
-*********************************************************************/
-
-/*********************************************************************
- * INCLUDES
- */
 #include "OSAL.h"
 #include "AF.h"
 #include "ZDApp.h"
@@ -151,11 +89,12 @@ afAddrType_t ProjectApp_DstAddr;
 /*********************************************************************
  * LOCAL FUNCTIONS
  */
-static void ProjectApp_ProcessZDOMsgs( zdoIncomingMsg_t *inMsg );
-static void ProjectApp_HandleKeys( byte shift, byte keys );
-static void ProjectApp_MessageMSGCB( afIncomingMSGPacket_t *pckt );
-static void ProjectApp_SendTheMessage( void );
 
+static void ProjectApp_HandleKeys( byte shift, byte keys );
+static void ProjectApp_SendTheMessage( void );
+static void ProjectApp_ProcessZDOMsgs( zdoIncomingMsg_t *inMsg );
+static void ProjectApp_SendBindcast( void );
+static void ProjectApp_MessageMSGCB( afIncomingMSGPacket_t *pkt );
 #if defined( IAR_ARMCM3_LM )
 static void ProjectApp_ProcessRtosMessage( void );
 #endif
@@ -224,7 +163,7 @@ void ProjectApp_Init( uint8 task_id )
   
    USER_Uart0_Init(HAL_UART_BR_115200);
    
-  
+ZDO_RegisterForZDOMsg( ProjectApp_TaskID, End_Device_Bind_rsp );
 }
 
 /*********************************************************************
@@ -285,9 +224,9 @@ uint16 ProjectApp_ProcessEvent( uint8 task_id, uint16 events )
           break;
 
         case AF_INCOMING_MSG_CMD:
-          ProjectApp_MessageMSGCB( MSGpkt );
+           ProjectApp_MessageMSGCB( MSGpkt );
           break;
-
+          
         case ZDO_STATE_CHANGE:
            user_state_change((devStates_t)(MSGpkt->hdr.status));
           break;
@@ -340,59 +279,6 @@ uint16 ProjectApp_ProcessEvent( uint8 task_id, uint16 events )
   return 0;
 }
 
-/*********************************************************************
- * Event Generation Functions
- */
-
-/*********************************************************************
- * @fn      ProjectApp_ProcessZDOMsgs()
- *
- * @brief   Process response messages
- *
- * @param   none
- *
- * @return  none
- */
-static void ProjectApp_ProcessZDOMsgs( zdoIncomingMsg_t *inMsg )
-{
-  switch ( inMsg->clusterID )
-  {
-    case End_Device_Bind_rsp:
-      if ( ZDO_ParseBindRsp( inMsg ) == ZSuccess )
-      {
-        // Light LED
-        HalLedSet( HAL_LED_4, HAL_LED_MODE_ON );
-      }
-#if defined( BLINK_LEDS )
-      else
-      {
-        // Flash LED to show failure
-        HalLedSet ( HAL_LED_4, HAL_LED_MODE_FLASH );
-      }
-#endif
-      break;
-
-    case Match_Desc_rsp:
-      {
-        ZDO_ActiveEndpointRsp_t *pRsp = ZDO_ParseEPListRsp( inMsg );
-        if ( pRsp )
-        {
-          if ( pRsp->status == ZSuccess && pRsp->cnt )
-          {
-            ProjectApp_DstAddr.addrMode = (afAddrMode_t)Addr16Bit;
-            ProjectApp_DstAddr.addr.shortAddr = pRsp->nwkAddr;
-            // Take the first endpoint, Can be changed to search through endpoints
-            ProjectApp_DstAddr.endPoint = pRsp->epList[0];
-
-            // Light LED
-            HalLedSet( HAL_LED_4, HAL_LED_MODE_ON );
-          }
-          osal_mem_free( pRsp );
-        }
-      }
-      break;
-  }
-}
 
 /*********************************************************************
  * @fn      ProjectApp_HandleKeys
@@ -432,7 +318,9 @@ static void ProjectApp_HandleKeys( uint8 shift, uint8 keys )
   {
     if ( keys & HAL_KEY_SW_1 )
     {
-      // Since SW1 isn't used for anything else in this application...
+    ProjectApp_SendBindcast();
+    }
+
 #if defined( SWITCH1_BIND )
       // we can use SW1 to simulate SW2 for devices that only have one switch,
       keys |= HAL_KEY_SW_2;
@@ -474,6 +362,42 @@ static void ProjectApp_HandleKeys( uint8 shift, uint8 keys )
                         FALSE );
     }
   }
+
+
+static void ProjectApp_ProcessZDOMsgs( zdoIncomingMsg_t *inMsg )//Ã¿´Î¡°°ó¶¨¡±×´Ì¬·¢Éú¸Ä±ä£¬¾ù»áµ÷ÓÃ´Ëº¯Êý
+{
+  switch ( inMsg->clusterID )
+  {
+    case End_Device_Bind_rsp:
+      if ( ZDO_ParseBindRsp( inMsg ) == ZSuccess )
+      {
+        printf("Bind success!\r\n");
+      }
+      else
+      {
+        printf("Bind failure!\r\n");
+      }
+      break;
+  }
+}
+
+static void ProjectApp_SendBindcast( void )
+{
+  char theMessageData[ ] = "Bind data\r\n";
+ 
+  ProjectApp_DstAddr.addrMode       = (afAddrMode_t)AddrNotPresent;
+  ProjectApp_DstAddr.endPoint       = 0;
+  ProjectApp_DstAddr.addr.shortAddr = 0;
+ 
+  AF_DataRequest( &ProjectApp_DstAddr,
+                  &ProjectApp_epDesc,
+                  PROJECTAPP_CLUSTERID,
+                  (byte)osal_strlen( theMessageData ) + 1,
+                  (byte *)&theMessageData,
+                  &ProjectApp_TransID,
+                  AF_DISCV_ROUTE,
+                  AF_DEFAULT_RADIUS
+                );
 }
 
 /*********************************************************************
