@@ -198,7 +198,7 @@ uint16 ProjectApp_ProcessEvent( uint8 task_id, uint16 events )
       {
         case ZDO_CB_MSG:
           ProjectApp_ProcessZDOMsgs( (zdoIncomingMsg_t *)MSGpkt );
-          break;
+          break;//每次“绑定”状态发生改变，均会调用此函数
 
         case KEY_CHANGE:
           ProjectApp_HandleKeys( ((keyChange_t *)MSGpkt)->state, ((keyChange_t *)MSGpkt)->keys );
