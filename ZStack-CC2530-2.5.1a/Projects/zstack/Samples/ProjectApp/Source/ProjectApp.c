@@ -291,42 +291,19 @@ uint16 ProjectApp_ProcessEvent( uint8 task_id, uint16 events )
  *
  * @return  none
  */
-static void ProjectApp_ProcessZDOMsgs( zdoIncomingMsg_t *inMsg )
+
+static void ProjectApp_ProcessZDOMsgs( zdoIncomingMsg_t *inMsg )//每次“绑定”状态发生改变，均会调用此函数
 {
   switch ( inMsg->clusterID )
   {
     case End_Device_Bind_rsp:
       if ( ZDO_ParseBindRsp( inMsg ) == ZSuccess )
       {
-        // Light LED
-        HalLedSet( HAL_LED_4, HAL_LED_MODE_ON );
+        printf("Bind success!\r\n");
       }
-#if defined( BLINK_LEDS )
       else
       {
-        // Flash LED to show failure
-        HalLedSet ( HAL_LED_4, HAL_LED_MODE_FLASH );
-      }
-#endif
-      break;
-
-    case Match_Desc_rsp:
-      {
-        ZDO_ActiveEndpointRsp_t *pRsp = ZDO_ParseEPListRsp( inMsg );
-        if ( pRsp )
-        {
-          if ( pRsp->status == ZSuccess && pRsp->cnt )
-          {
-            ProjectApp_DstAddr.addrMode = (afAddrMode_t)Addr16Bit;
-            ProjectApp_DstAddr.addr.shortAddr = pRsp->nwkAddr;
-            // Take the first endpoint, Can be changed to search through endpoints
-            ProjectApp_DstAddr.endPoint = pRsp->epList[0];
-
-            // Light LED
-            HalLedSet( HAL_LED_4, HAL_LED_MODE_ON );
-          }
-          osal_mem_free( pRsp );
-        }
+        printf("Bind failure!\r\n");
       }
       break;
   }
