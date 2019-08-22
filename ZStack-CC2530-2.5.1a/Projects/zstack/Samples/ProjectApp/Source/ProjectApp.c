@@ -393,6 +393,24 @@ static void ProjectApp_HandleKeys( uint8 shift, uint8 keys )
 }
 
 
+static void ProjectApp_SendBindcast( void )
+{
+  char theMessageData[ ] = "Bind data\r\n";
+ 
+  ProjectApp_DstAddr.addrMode       = (afAddrMode_t)AddrNotPresent;
+  ProjectApp_DstAddr.endPoint       = 0;
+  ProjectApp_DstAddr.addr.shortAddr = 0;
+ 
+  AF_DataRequest( &ProjectApp_DstAddr,
+                  &ProjectApp_epDesc,
+                  PROJECTAPP_CLUSTERID,
+                  (byte)osal_strlen( theMessageData ) + 1,
+                  (byte *)&theMessageData,
+                  &ProjectApp_TransID,
+                  AF_DISCV_ROUTE,
+                  AF_DEFAULT_RADIUS
+                );
+}
 
 
 static void ProjectApp_MessageMSGCB( afIncomingMSGPacket_t *pkt )
@@ -475,5 +493,4 @@ static void ProjectApp_ProcessRtosMessage( void )
 }
 #endif
 
-/*********************************************************************
- */
+
