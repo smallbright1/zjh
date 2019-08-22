@@ -93,6 +93,7 @@ static void ProjectApp_ProcessZDOMsgs( zdoIncomingMsg_t *inMsg );
 static void ProjectApp_HandleKeys( byte shift, byte keys );
 static void ProjectApp_MessageMSGCB( afIncomingMSGPacket_t *pckt );
 static void ProjectApp_SendTheMessage( void );
+static void ProjectApp_SendBindcast( void );
 
 #if defined( IAR_ARMCM3_LM )
 static void ProjectApp_ProcessRtosMessage( void );
@@ -391,21 +392,9 @@ static void ProjectApp_HandleKeys( uint8 shift, uint8 keys )
   }
 }
 
-/*********************************************************************
- * LOCAL FUNCTIONS
- */
 
-/*********************************************************************
- * @fn      ProjectApp_MessageMSGCB
- *
- * @brief   Data message processor callback.  This function processes
- *          any incoming data - probably from other devices.  So, based
- *          on cluster ID, perform the intended action.
- *
- * @param   none
- *
- * @return  none
- */
+
+
 static void ProjectApp_MessageMSGCB( afIncomingMSGPacket_t *pkt )
 {
   switch ( pkt->clusterId )
