@@ -318,6 +318,7 @@ static void ProjectApp_HandleKeys( uint8 shift, uint8 keys )
   {
     if ( keys & HAL_KEY_SW_1 )
     {
+     
     ProjectApp_SendBindcast();
     }
 
