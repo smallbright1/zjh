@@ -99,6 +99,7 @@ static void ProjectApp_HandleKeys( byte shift, byte keys );
 static void ProjectApp_MessageMSGCB( afIncomingMSGPacket_t *pckt );
 static void ProjectApp_SendTheMessage( void );
 static void ProjectApp_SendBindcast( void );
+void DelayMS(uint msec);
 
 #if defined( IAR_ARMCM3_LM )
 static void ProjectApp_ProcessRtosMessage( void );
