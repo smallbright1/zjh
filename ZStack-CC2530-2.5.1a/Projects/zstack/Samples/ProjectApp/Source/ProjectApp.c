@@ -375,7 +375,9 @@ static void ProjectApp_HandleKeys( uint8 shift, uint8 keys )
     {
       HalLedSet ( HAL_LED_4, HAL_LED_MODE_OFF );
 
-      // Initiate an End Device Bind Request for the mandatory endpoint
+      // Initiate an End Device Bind Request for the mandatory endpo
+      printf("Bind start!\r\n");
+      zAddrType_t dstAddr;
       dstAddr.addrMode = Addr16Bit;
       dstAddr.addr.shortAddr = 0x0000; // Coordinator
       ZDP_EndDeviceBindReq( &dstAddr, NLME_GetShortAddr(),
@@ -384,6 +386,7 @@ static void ProjectApp_HandleKeys( uint8 shift, uint8 keys )
                             PROJECTAPP_MAX_CLUSTERS, (cId_t *)ProjectApp_ClusterList,
                             PROJECTAPP_MAX_CLUSTERS, (cId_t *)ProjectApp_ClusterList,
                             FALSE );
+
     }
 
     if ( keys & HAL_KEY_SW_3 )
@@ -450,7 +453,7 @@ static void ProjectApp_MessageMSGCB( afIncomingMSGPacket_t *pkt )
   switch ( pkt->clusterId )
   {
     case PROJECTAPP_CLUSTERID:
-      if(strstr((const char *)pkt->cmd.Data,"Bind data"))
+     if(strstr((const char *)pkt->cmd.Data,"Bind data"))
       {
           InitLed();
           LED2 = !LED2;
