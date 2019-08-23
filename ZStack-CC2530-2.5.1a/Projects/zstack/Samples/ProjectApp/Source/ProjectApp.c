@@ -44,6 +44,8 @@
 // This list should be filled with Application specific Cluster IDs.
 #define LED1 P1_0       //定义P1.0口为LED1控制端
 #define LED2 P1_1       //定义P1.1口为LED2控制端
+typedef unsigned char uchar;
+typedef unsigned int uint;
 const cId_t ProjectApp_ClusterList[PROJECTAPP_MAX_CLUSTERS] =
 {
   PROJECTAPP_CLUSTERID
@@ -97,6 +99,7 @@ static void ProjectApp_HandleKeys( byte shift, byte keys );
 static void ProjectApp_MessageMSGCB( afIncomingMSGPacket_t *pckt );
 static void ProjectApp_SendTheMessage( void );
 static void ProjectApp_SendBindcast( void );
+
 
 #if defined( IAR_ARMCM3_LM )
 static void ProjectApp_ProcessRtosMessage( void );
