@@ -42,6 +42,8 @@
  * GLOBAL VARIABLES
  */
 // This list should be filled with Application specific Cluster IDs.
+#define LED1 P1_0       //定义P1.0口为LED1控制端
+#define LED2 P1_1       //定义P1.1口为LED2控制端
 const cId_t ProjectApp_ClusterList[PROJECTAPP_MAX_CLUSTERS] =
 {
   PROJECTAPP_CLUSTERID
