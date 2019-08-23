@@ -100,7 +100,6 @@ static void ProjectApp_MessageMSGCB( afIncomingMSGPacket_t *pckt );
 static void ProjectApp_SendTheMessage( void );
 static void ProjectApp_SendBindcast( void );
 
-
 #if defined( IAR_ARMCM3_LM )
 static void ProjectApp_ProcessRtosMessage( void );
 #endif
@@ -421,6 +420,13 @@ static void ProjectApp_SendBindcast( void )
                 );
 }
 
+void DelayMS(uint msec)
+{ 
+    uint i,j;
+    
+    for (i=0; i<msec; i++)
+        for (j=0; j<530; j++);
+}
 
 static void ProjectApp_MessageMSGCB( afIncomingMSGPacket_t *pkt )
 {
