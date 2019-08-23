@@ -103,6 +103,7 @@ static void ProjectApp_SendTheMessage( void );
 static void ProjectApp_SendBindcast( void );
 void DelayMS(uint msec);
 void LedOnOrOff(uchar mode);
+void InitLed(void);
 
 #if defined( IAR_ARMCM3_LM )
 static void ProjectApp_ProcessRtosMessage( void );
