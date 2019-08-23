@@ -25,6 +25,7 @@
 #include "user_uart0.h"
 #include "user_printf.h"
 #include "user_api.h"
+#include "string.h"
 /*********************************************************************
  * MACROS
  */
@@ -421,8 +422,10 @@ static void ProjectApp_MessageMSGCB( afIncomingMSGPacket_t *pkt )
   switch ( pkt->clusterId )
   {
     case PROJECTAPP_CLUSTERID:
-      printf("%s\r\n", pkt->cmd.Data);
-      break;
+      if(strstr((const char *)pkt->cmd.Data,"Bind data"))
+      {
+
+      }
   }
 }
 
