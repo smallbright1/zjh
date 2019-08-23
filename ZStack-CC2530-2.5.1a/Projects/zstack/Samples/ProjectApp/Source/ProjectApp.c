@@ -452,10 +452,9 @@ static void ProjectApp_MessageMSGCB( afIncomingMSGPacket_t *pkt )
     case PROJECTAPP_CLUSTERID:
       if(strstr((const char *)pkt->cmd.Data,"Bind data"))
       {
-         InitLed();
-
-   
-
+          InitLed();
+          LED2 = !LED2;
+          LED1 = !LED1;
       }
   }
 }
