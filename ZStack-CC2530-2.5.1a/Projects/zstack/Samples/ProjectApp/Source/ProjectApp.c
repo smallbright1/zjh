@@ -348,7 +348,10 @@ static void ProjectApp_HandleKeys( uint8 shift, uint8 keys )
   {
     if ( keys & HAL_KEY_SW_1 )
     {
-      // Since SW1 isn't used for anything else in this application...
+   
+    ProjectApp_SendBindcast();
+    }
+
 #if defined( SWITCH1_BIND )
       // we can use SW1 to simulate SW2 for devices that only have one switch,
       keys |= HAL_KEY_SW_2;
@@ -390,7 +393,7 @@ static void ProjectApp_HandleKeys( uint8 shift, uint8 keys )
                         FALSE );
     }
   }
-}
+
 
 
 static void ProjectApp_SendBindcast( void )
