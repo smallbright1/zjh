@@ -429,6 +429,13 @@ void DelayMS(uint msec)
         for (j=0; j<530; j++);
 }
 
+void LedOnOrOff(uchar mode)
+{ 
+  LED1=mode;
+  LED2=mode;
+  LED3=mode;
+}
+
 static void ProjectApp_MessageMSGCB( afIncomingMSGPacket_t *pkt )
 {
   switch ( pkt->clusterId )
