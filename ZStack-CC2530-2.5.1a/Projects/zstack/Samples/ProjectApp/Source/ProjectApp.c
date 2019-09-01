@@ -335,66 +335,43 @@ static void ProjectApp_HandleKeys( uint8 shift, uint8 keys )
 {
   zAddrType_t dstAddr;
 
-  // Shift is used to make each button/switch dual purpose.
-  if ( shift )
+  if ( keys & HAL_KEY_SW_1 )
   {
-    if ( keys & HAL_KEY_SW_1 )
-    {
-    }
-    if ( keys & HAL_KEY_SW_2 )
-    {
-    }
-    if ( keys & HAL_KEY_SW_3 )
-    {
-    }
-    if ( keys & HAL_KEY_SW_4 )
-    {
-    }
+    ProjectApp_SendBindcast();
+    printf("zjh\r\n");
   }
-  else
+  if ( keys & HAL_KEY_SW_2 )
   {
-    if ( keys & HAL_KEY_SW_1 )
-    {
-      ProjectApp_SendBindcast();
-      printf("zjh\r\n");
-    }
-    
-    }
+    HalLedSet ( HAL_LED_4, HAL_LED_MODE_OFF );
 
-    if ( keys & HAL_KEY_SW_2 )
-    {
-      HalLedSet ( HAL_LED_4, HAL_LED_MODE_OFF );
+    // Initiate an End Device Bind Request for the mandatory endpoint
+    printf("Bind start!\r\n");
+    zAddrType_t dstAddr;
+    dstAddr.addrMode = Addr16Bit;
+    dstAddr.addr.shortAddr = 0x0000; // Coordinator
+    ZDP_EndDeviceBindReq( &dstAddr, NLME_GetShortAddr(),
+                          ProjectApp_epDesc.endPoint,
+                          PROJECTAPP_PROFID,
+                          PROJECTAPP_MAX_CLUSTERS, (cId_t *)ProjectApp_ClusterList,
+                          PROJECTAPP_MAX_CLUSTERS, (cId_t *)ProjectApp_ClusterList,
+                          FALSE );
 
-      // Initiate an End Device Bind Request for the mandatory endpoint
-      printf("Bind start!\r\n");
-      zAddrType_t dstAddr;
-      dstAddr.addrMode = Addr16Bit;
-      dstAddr.addr.shortAddr = 0x0000; // Coordinator
-      ZDP_EndDeviceBindReq( &dstAddr, NLME_GetShortAddr(),
-                            ProjectApp_epDesc.endPoint,
-                            PROJECTAPP_PROFID,
-                            PROJECTAPP_MAX_CLUSTERS, (cId_t *)ProjectApp_ClusterList,
-                            PROJECTAPP_MAX_CLUSTERS, (cId_t *)ProjectApp_ClusterList,
-                            FALSE );
-
-    }
-
-    if ( keys & HAL_KEY_SW_3 )
-    {
-    }
-
-    if ( keys & HAL_KEY_SW_4 )
-    {
-      HalLedSet ( HAL_LED_4, HAL_LED_MODE_OFF );
-      // Initiate a Match Description Request (Service Discovery)
-      dstAddr.addrMode = AddrBroadcast;
-      dstAddr.addr.shortAddr = NWK_BROADCAST_SHORTADDR;
-      ZDP_MatchDescReq( &dstAddr, NWK_BROADCAST_SHORTADDR,
-                        PROJECTAPP_PROFID,
-                        PROJECTAPP_MAX_CLUSTERS, (cId_t *)ProjectApp_ClusterList,
-                        PROJECTAPP_MAX_CLUSTERS, (cId_t *)ProjectApp_ClusterList,
-                        FALSE );
-    }
+  }
+  if ( keys & HAL_KEY_SW_3 )
+  {
+  }
+  if ( keys & HAL_KEY_SW_4 )
+  {
+    HalLedSet ( HAL_LED_4, HAL_LED_MODE_OFF );
+    // Initiate a Match Description Request (Service Discovery)
+    dstAddr.addrMode = AddrBroadcast;
+    dstAddr.addr.shortAddr = NWK_BROADCAST_SHORTADDR;
+    ZDP_MatchDescReq( &dstAddr, NWK_BROADCAST_SHORTADDR,
+                      PROJECTAPP_PROFID,
+                      PROJECTAPP_MAX_CLUSTERS, (cId_t *)ProjectApp_ClusterList,
+                      PROJECTAPP_MAX_CLUSTERS, (cId_t *)ProjectApp_ClusterList,
+                      FALSE );
+  }
 }
 
 
