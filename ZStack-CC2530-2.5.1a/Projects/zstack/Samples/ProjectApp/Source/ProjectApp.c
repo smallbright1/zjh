@@ -42,8 +42,6 @@
  * GLOBAL VARIABLES
  */
 // This list should be filled with Application specific Cluster IDs.
-#define LED1 P1_0       //定义P1.0口为LED1控制端
-#define LED2 P1_1       //定义P1.1口为LED2控制端
 
 typedef unsigned char uchar;
 typedef unsigned int uint;
@@ -99,11 +97,10 @@ afAddrType_t ProjectApp_DstAddr;
 static void ProjectApp_ProcessZDOMsgs( zdoIncomingMsg_t *inMsg );
 static void ProjectApp_HandleKeys( byte shift, byte keys );
 static void ProjectApp_MessageMSGCB( afIncomingMSGPacket_t *pckt );
-static void ProjectApp_SendTheMessage( void );
 static void ProjectApp_SendBindcast( void );
+static void ProjectApp_SendTheMessage( void );
 void DelayMS(uint msec);
-void LedOnOrOff(uchar mode);
-void InitLed(void);
+
 
 #if defined( IAR_ARMCM3_LM )
 static void ProjectApp_ProcessRtosMessage( void );
@@ -358,24 +355,17 @@ static void ProjectApp_HandleKeys( uint8 shift, uint8 keys )
   {
     if ( keys & HAL_KEY_SW_1 )
     {
-   
-    ProjectApp_SendBindcast();
+      ProjectApp_SendBindcast();
+      printf("zjh\r\n");
     }
-
-#if defined( SWITCH1_BIND )
-      // we can use SW1 to simulate SW2 for devices that only have one switch,
-      keys |= HAL_KEY_SW_2;
-#elif defined( SWITCH1_MATCH )
-      // or use SW1 to simulate SW4 for devices that only have one switch
-      keys |= HAL_KEY_SW_4;
-#endif
+    
     }
 
     if ( keys & HAL_KEY_SW_2 )
     {
       HalLedSet ( HAL_LED_4, HAL_LED_MODE_OFF );
 
-      // Initiate an End Device Bind Request for the mandatory endpo
+      // Initiate an End Device Bind Request for the mandatory endpoint
       printf("Bind start!\r\n");
       zAddrType_t dstAddr;
       dstAddr.addrMode = Addr16Bit;
@@ -405,7 +395,7 @@ static void ProjectApp_HandleKeys( uint8 shift, uint8 keys )
                         PROJECTAPP_MAX_CLUSTERS, (cId_t *)ProjectApp_ClusterList,
                         FALSE );
     }
-  }
+}
 
 
 
@@ -427,7 +417,7 @@ static void ProjectApp_SendBindcast( void )
                   AF_DEFAULT_RADIUS
                 );
 }
-
+/*
 void DelayMS(uint msec)
 { 
     uint i,j;
@@ -447,18 +437,18 @@ void InitLed(void)
   P1DIR |=0x13;
   LedOnOrOff(1);
 }
-
+*/
 static void ProjectApp_MessageMSGCB( afIncomingMSGPacket_t *pkt )
 {
   switch ( pkt->clusterId )
   {
     case PROJECTAPP_CLUSTERID:
-     if(strstr((const char *)pkt->cmd.Data,"Bind data"))
-      {
-          InitLed();
-          LED2 = !LED2;
-          LED1 = !LED1;
+   /*if(strstr((const char *)pkt->cmd.Data,"Bind data"))
+    {
+            HalLedSet(HAL_LED_ALL, HAL_LED_MODE_ON);
       }
+     */
+      break;
   }
 }
 
